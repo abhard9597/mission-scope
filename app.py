@@ -12,7 +12,7 @@ st.set_page_config(
     page_title="MissionScope",
     page_icon="🚀",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 DATA_PATH = Path(__file__).with_name("space_missions.csv")
@@ -155,17 +155,42 @@ def ensure_filter_state(df: pd.DataFrame, min_year: int, max_year: int) -> None:
 
 
 def exploration_filters(df: pd.DataFrame, min_year: int, max_year: int) -> None:
-    """Render detailed controls late in the story while keeping all views reactive."""
-    with st.expander("Fine-tune this mission view", expanded=False):
+    """Render detailed controls in the left sidebar."""
+    with st.sidebar:
+        st.markdown("### Fine-tune this mission view")
         st.caption("All charts and headline figures above update as soon as you change a selection.")
-        st.slider("Launch year", min_year, max_year, key="year_range", help="Inclusive launch-year range.")
-        left, right = st.columns(2, gap="large")
-        with left:
-            st.multiselect("Launch provider", sorted(df["Company"].dropna().unique().tolist()), key="company")
-            st.multiselect("Launch country", sorted(df["Country"].dropna().unique().tolist()), key="country")
-        with right:
-            st.multiselect("Mission outcome", sorted(df["MissionStatus"].dropna().unique().tolist()), key="outcome")
-            st.multiselect("Rocket status", sorted(df["RocketStatus"].dropna().unique().tolist()), key="rocket_status")
+
+        st.slider(
+            "Launch year",
+            min_year,
+            max_year,
+            key="year_range",
+            help="Inclusive launch-year range.",
+        )
+
+        st.multiselect(
+            "Launch provider",
+            sorted(df["Company"].dropna().unique().tolist()),
+            key="company",
+        )
+
+        st.multiselect(
+            "Launch country",
+            sorted(df["Country"].dropna().unique().tolist()),
+            key="country",
+        )
+
+        st.multiselect(
+            "Mission outcome",
+            sorted(df["MissionStatus"].dropna().unique().tolist()),
+            key="outcome",
+        )
+
+        st.multiselect(
+            "Rocket status",
+            sorted(df["RocketStatus"].dropna().unique().tolist()),
+            key="rocket_status",
+        )
 
 
 def main() -> None:
